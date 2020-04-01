@@ -20,9 +20,5 @@ jobs:
         env:
           API_ACCESS_TOKEN: ${{ secrets.API_ACCESS_TOKEN }}
           TEAM_NAME: ""
-          INCLUDE: "dittnav-event-aggregator dittnav-event-handler dittnav-event-test-producer dittnav-api"
+          INCLUDE: "dittnav-event-aggregator dittnav-event-handler dittnav-event-test-producer dittnav-api pb-nav-mocked pb-oidc-provider-gui"
           EXCLUDE: ""
-
-
-
-
