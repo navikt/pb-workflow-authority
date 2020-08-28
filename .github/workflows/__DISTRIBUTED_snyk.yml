@@ -1,7 +1,7 @@
 name: Vulnerabilities scanning of dependencies
 on: push
 jobs:
-  security:
+  Vulnerability_scanning:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
