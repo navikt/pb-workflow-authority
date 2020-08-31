@@ -1,12 +1,11 @@
 name: Publiser workflows til andre repoer
 
 on:
-  push:
-    branches:
-      - separate-file-for-apps
+  repository_dispatch:
+    types: distribute-workflows
 
 env:
-  DRY_RUN: true
+  DRY_RUN: ${{ github.event.client_payload.dry_run }}
 
 jobs:
   build-and-publish-on-master:
