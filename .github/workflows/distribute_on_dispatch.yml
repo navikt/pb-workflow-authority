@@ -14,11 +14,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Read list of default apps
+        run: |
+          echo "::set-env name=DEFAULT_APPS::$(cat default_include_apps.conf | tr '\n' ' ')"
+
       - name: Distribute workflows
         run: |
           ./distribute_workflows.sh
         env:
           API_ACCESS_TOKEN: ${{ secrets.API_ACCESS_TOKEN }}
           TEAM_NAME: ""
-          INCLUDE: "dittnav-event-aggregator dittnav-event-handler dittnav-event-test-producer dittnav dittnav-api dittnav-eventer-modia pb-nav-mocked pb-oidc-provider-gui dittnav-kafka-backup-reader dittnav-nightly-usage-statistics-reporter dittnav-varsel-bestiller innloggingsstatus"
+          INCLUDE: ${{ env.DEFAULT_APPS }}
           EXCLUDE: ""
