@@ -7,7 +7,7 @@ jobs:
   should-run-end-to-end-tests:
     if: github.repository != 'navikt/dittnav' && github.repository != 'navikt/dittnav-eventer-modia'
       && github.repository != 'navikt/dittnav-kafka-backup-reader' && github.repository != 'navikt/dittnav-nightly-usage-statistics-reporter'
-        && github.repository != 'navikt/innloggingsstatus'
+        && github.repository != 'navikt/innloggingsstatus' && github.repository != 'navikt/pb-workflow-authority'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
