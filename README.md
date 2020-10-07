@@ -15,4 +15,13 @@
 
 - Workflow-filene bør ikke ende på linjeskift. Dette forhindrer at versjon-sjekken fungerer riktig.
 - Sletting av workflows i andre repoer støttes ikke enda. Dette kan implementeres dersom det blir behov for det.
+
 - Workflows som trigges av push til master bør ha et filter på workflow-mappen, slik at man evt. ikke starter prodsetting ved push av workflow.
+
+# Henvendelser
+
+Spørsmål knyttet til koden eller prosjektet kan rettes mot https://github.com/orgs/navikt/teams/personbruker
+
+## For NAV-ansatte
+
+Interne henvendelser kan sendes via Slack i kanalen #team-personbruker.
