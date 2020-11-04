@@ -8,7 +8,7 @@ env:
   DRY_RUN: ${{ github.event.client_payload.dry_run }}
 
 jobs:
-  build-and-publish-on-master:
+  build-and-publish-on-main:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

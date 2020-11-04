@@ -2,6 +2,7 @@
 
 export REPOSITORY=$1
 IFS=
+SOURCE_FOLDER=$2
 
 ### Create new tree
 function createNode {
@@ -14,8 +15,11 @@ function createNode {
   )
 }
 
-## Get latest commit sha on master
-export BASE_TREE_SHA=$(curl -s -u "$API_ACCESS_TOKEN:" "https://api.github.com/repos/$REPOSITORY/git/refs/heads/master" | jq -r '.object.sha')
+## Get name of main branch
+MAIN_BRANCH=$(curl -s -u "$API_ACCESS_TOKEN:" "https://api.github.com/repos/$REPOSITORY" | jq -r '.default_branch')
+
+## Get latest commit sha on main
+export BASE_TREE_SHA=$(curl -s -u "$API_ACCESS_TOKEN:" "https://api.github.com/repos/$REPOSITORY/git/refs/heads/$MAIN_BRANCH" | jq -r '.object.sha')
 
 
 ## Find existing workflows in target repository
@@ -24,7 +28,7 @@ EXISTING_WORKFLOWS=$(./find_existing_workflows.sh)
 
 ## Iterate through workflow folder and only include those that differ from target workflows
 let TOTAL_FILES_CHANGED=0
-for file in ./.github/workflows/__DISTRIBUTED_*; do
+for file in "$SOURCE_FOLDER"/__DISTRIBUTED_*; do
 
   TARGET_FILE_NAME=$(basename -- $file | sed 's/__DISTRIBUTED_//g')
 
@@ -100,7 +104,7 @@ PUSH_COMMIT_PAYLOAD=$(jq -n -c \
 
 
 
-HEAD_SHA=$(curl -s -X PATCH -u "$API_ACCESS_TOKEN:" --data "$PUSH_COMMIT_PAYLOAD" "https://api.github.com/repos/$REPOSITORY/git/refs/heads/master" | jq -r '.object.sha')
+HEAD_SHA=$(curl -s -X PATCH -u "$API_ACCESS_TOKEN:" --data "$PUSH_COMMIT_PAYLOAD" "https://api.github.com/repos/$REPOSITORY/git/refs/heads/$MAIN_BRANCH" | jq -r '.object.sha')
 
 
 echo "$REPOSITORY is now on commit $HEAD_SHA"

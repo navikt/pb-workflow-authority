@@ -16,7 +16,7 @@
 - Workflow-filene bør ikke ende på linjeskift. Dette forhindrer at versjon-sjekken fungerer riktig.
 - Sletting av workflows i andre repoer støttes ikke enda. Dette kan implementeres dersom det blir behov for det.
 
-- Workflows som trigges av push til master bør ha et filter på workflow-mappen, slik at man evt. ikke starter prodsetting ved push av workflow.
+- Workflows som trigges av push til master/main bør ha et filter på workflow-mappen, slik at man evt. ikke starter prodsetting ved push av workflow.
 
 # Henvendelser
 
