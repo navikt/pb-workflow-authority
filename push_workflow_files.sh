@@ -3,8 +3,9 @@
 export REPOSITORY=$1
 IFS=
 SOURCE_FOLDER=$2
+FILES_TO_DELETE=$3
 
-### Create new tree
+## Create new file
 function createNode {
   WORKFLOW_FILE_NAME=$(basename -- $1 | sed 's/__DISTRIBUTED_//g')
   CONTENT=$(cat $1)
@@ -12,6 +13,14 @@ function createNode {
               --arg path ".github/workflows/$WORKFLOW_FILE_NAME" \
               --arg content "$CONTENT" \
               '{ path: $path, mode: "100644", type: "blob", content: $content }'
+  )
+}
+
+function deleteNode {
+  WORKFLOW_FILE_NAME=$(basename -- $1 | sed 's/__DISTRIBUTED_//g')
+  echo $(jq -n -c \
+              --arg path ".github/workflows/$WORKFLOW_FILE_NAME" \
+              '{ path: $path, mode: "100644", type: "blob", sha: null }'
   )
 }
 
@@ -35,18 +44,30 @@ for file in "$SOURCE_FOLDER"/__DISTRIBUTED_*; do
   EXISTING_FILE_SHA=$(echo $EXISTING_WORKFLOWS | jq -r '.[] | select(.path == "'"$TARGET_FILE_NAME"'").sha')
   NEW_FILE_SHA=$(git hash-object $file)
 
-  if [[ $EXISTING_FILE_SHA != $NEW_FILE_SHA ]]; then
+  if [[ ! -z $FILES_TO_DELETE ]] && grep -Fxq "$TARGET_FILE_NAME" "$FILES_TO_DELETE"; then
+    echo "$TARGET_FILE_NAME was included in both files to delete and as a managed workflow. Deletion takes precedence."
+    continue
+  elif [[ $EXISTING_FILE_SHA != $NEW_FILE_SHA ]]; then
     let TOTAL_FILES_CHANGED=$TOTAL_FILES_CHANGED+1
     FILES_TO_UPDATE="$FILES_TO_UPDATE$TARGET_FILE_NAME, "
     TREE_NODES="$TREE_NODES$(createNode $file),"
   fi
 done
 
+## Iterate through remote workflows and mark requested files for deletion
+REMOTE_WORKFLOWS=$(echo $EXISTING_WORKFLOWS | jq -r '.[].path')
+while IFS= read FILE_NAME; do
+  if [[ ! -z $FILES_TO_DELETE ]] && grep -Fxq "$FILE_NAME" "$FILES_TO_DELETE"; then
+      let TOTAL_FILES_CHANGED=$TOTAL_FILES_CHANGED+1
+      FILES_TO_UPDATE="$FILES_TO_UPDATE$TARGET_FILE_NAME, "
+      TREE_NODES="$TREE_NODES$(deleteNode $FILE_NAME),"
+  fi
+done <<< "$REMOTE_WORKFLOWS"
 
 ## Print status and exit if dry run
 if [[ $DRY_RUN == "true" ]]; then
   if [[ -z $FILES_TO_UPDATE ]]; then
-    echo "Dry run for $REPOSITORY: No workflow files would have been added or changed."
+    echo "Dry run for $REPOSITORY: No workflow files would have been added, changed or removed."
     exit 0
   else
     FILES_LIST="[$(echo $FILES_TO_UPDATE | sed 's/, $//')]"
