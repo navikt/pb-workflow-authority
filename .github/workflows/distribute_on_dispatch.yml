@@ -26,3 +26,4 @@ jobs:
           TEAM_NAME: ""
           INCLUDE: ${{ env.DEFAULT_APPS }}
           EXCLUDE: ""
+          DELETE_CONFIG: "./config/workflow_files_to_delete.conf"
