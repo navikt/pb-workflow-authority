@@ -16,7 +16,7 @@ jobs:
 
       - name: Read list of default apps
         run: |
-          echo "DEFAULT_APPS=$(cat default_include_apps.conf | tr '\n' ' ')" >> $GITHUB_ENV
+          echo "DEFAULT_APPS=$(cat ./config/default_include_apps.conf | tr '\n' ' ')" >> $GITHUB_ENV
 
       - name: Distribute workflows
         run: |

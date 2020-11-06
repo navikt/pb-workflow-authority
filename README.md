@@ -14,7 +14,11 @@
 ## Bemerkelser
 
 - Workflow-filene bør ikke ende på linjeskift. Dette forhindrer at versjon-sjekken fungerer riktig.
-- Sletting av workflows i andre repoer støttes ikke enda. Dette kan implementeres dersom det blir behov for det.
+- Sletting av workflows gjøres ved å legge til workflow-filnavnet (uten __DISTRIBUTED_) i config/workflow_files_to_delete.conf
+  Vær varsom på at dette så lenge filnavnet finnes i denne config-filen, vil denne filen alltid slettes fra destinasjons-repoet,
+  selv om filen ikke ble opprettet av pb-workflow-authority i utgangspunktet.
+- Renaming av filer kan gjøres ved å rename __DISTRIBUTED_ filen og så markere det gamle filnavnet for sletting som forklart over.
+  
 
 - Workflows som trigges av push til master/main bør ha et filter på workflow-mappen, slik at man evt. ikke starter prodsetting ved push av workflow.
 
