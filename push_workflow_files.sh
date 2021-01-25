@@ -11,7 +11,7 @@ function createNode {
   CONTENT=$(cat $1)
   echo $(jq -n -c \
               --arg path ".github/workflows/$WORKFLOW_FILE_NAME" \
-              --arg content "$CONTENT" \
+              --rawfile $1 \
               '{ path: $path, mode: "100644", type: "blob", content: $content }'
   )
 }
