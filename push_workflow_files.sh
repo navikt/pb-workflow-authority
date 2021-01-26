@@ -8,7 +8,6 @@ FILES_TO_DELETE=$3
 ## Create new file
 function createNode {
   WORKFLOW_FILE_NAME=$(basename -- $1 | sed 's/__DISTRIBUTED_//g')
-  CONTENT=$(cat $1)
   echo $(jq -n -c \
               --arg path ".github/workflows/$WORKFLOW_FILE_NAME" \
               --rawfile content $1 \
