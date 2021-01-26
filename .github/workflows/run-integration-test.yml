@@ -4,16 +4,11 @@ on: push
 
 jobs:
   build-branch:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
 
       - name: Sjekk ut koden
         uses: actions/checkout@v2
-
-      - name: jq check
-        run: |
-          jq -help
-          jq
 
       - name: Run github integration test
         run: ./test/github_integration_test.sh
