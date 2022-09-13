@@ -3,11 +3,11 @@
 ## Use current time to create new and unique workflow file.
 DATETIME=$(date +%Y%m%d%H%M%S)
 
-sed -i "s/Datetime - [0-9]\{14\}/Datetime - $DATETIME/" './test/workflows/__DISTRIBUTED_dummy.yaml'
+sed -i "s/Datetime - [0-9]\{14\}/Datetime - $DATETIME/" './test/distributed/dummy.yaml'
 
 
 ## Use script to apply workflow to remote repository
-./push_workflow_files.sh 'navikt/pb-workflow-authority-test-dummy' './test/workflows'
+./push_workflow_files.sh 'navikt/pb-workflow-authority-test-dummy' './test/distributed'
 
 
 ## Find latest commit on main branch
@@ -23,17 +23,17 @@ if [[ -z $DUMMY_WORKFLOW_SHA ]]; then
 fi
 
 ## Find contents of remote file
-curl -s -u "$API_ACCESS_TOKEN:" "https://api.github.com/repos/navikt/pb-workflow-authority-test-dummy/git/blobs/$DUMMY_WORKFLOW_SHA" | jq -r '.content' | base64 -d >> ./test/workflows/dummy.yaml
+curl -s -u "$API_ACCESS_TOKEN:" "https://api.github.com/repos/navikt/pb-workflow-authority-test-dummy/git/blobs/$DUMMY_WORKFLOW_SHA" | jq -r '.content' | base64 -d >> ./test/distributed/remote-dummy.yaml
 
 ## Verify that contents of remote file matches local file
-if ! diff -q './test/workflows/dummy.yaml' './test/workflows/__DISTRIBUTED_dummy.yaml' &>/dev/null; then
+if ! diff -q './test/distributed/dummy.yaml' './test/distributed/remote-dummy.yaml' &>/dev/null; then
   echo 'Failed in applying changes to remote repository.'
   exit 1
 fi
 
 
 ## Run script again, this time with delete config defined
-./push_workflow_files.sh 'navikt/pb-workflow-authority-test-dummy' './test/workflows' './test/delete.conf'
+./push_workflow_files.sh 'navikt/pb-workflow-authority-test-dummy' './test/distributed' './test/delete.conf'
 
 ## Fetch remaining files in remote workflow repository
 CURRENT_MAIN_SHA=$(curl -s -u "$API_ACCESS_TOKEN:" "https://api.github.com/repos/navikt/pb-workflow-authority-test-dummy/git/refs/heads/main" | jq -r '.object.sha')

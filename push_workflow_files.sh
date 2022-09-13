@@ -7,7 +7,7 @@ FILES_TO_DELETE=$3
 
 ## Create new file
 function createNode {
-  WORKFLOW_FILE_NAME=$(basename -- $1 | sed 's/__DISTRIBUTED_//g')
+  WORKFLOW_FILE_NAME=$(basename -- $1)
   echo $(jq -n -c \
               --arg path ".github/workflows/$WORKFLOW_FILE_NAME" \
               --rawfile content $1 \
@@ -16,7 +16,7 @@ function createNode {
 }
 
 function deleteNode {
-  WORKFLOW_FILE_NAME=$(basename -- $1 | sed 's/__DISTRIBUTED_//g')
+  WORKFLOW_FILE_NAME=$(basename -- $1)
   echo $(jq -n -c \
               --arg path ".github/workflows/$WORKFLOW_FILE_NAME" \
               '{ path: $path, mode: "100644", type: "blob", sha: null }'
@@ -36,9 +36,9 @@ EXISTING_WORKFLOWS=$(./find_existing_workflows.sh)
 
 ## Iterate through workflow folder and only include those that differ from target workflows
 let TOTAL_FILES_CHANGED=0
-for file in "$SOURCE_FOLDER"/__DISTRIBUTED_*; do
+for file in "$SOURCE_FOLDER/*"; do
 
-  TARGET_FILE_NAME=$(basename -- $file | sed 's/__DISTRIBUTED_//g')
+  TARGET_FILE_NAME=$(basename -- $file)
 
   EXISTING_FILE_SHA=$(echo $EXISTING_WORKFLOWS | jq -r '.[] | select(.path == "'"$TARGET_FILE_NAME"'").sha')
   NEW_FILE_SHA=$(git hash-object $file)
