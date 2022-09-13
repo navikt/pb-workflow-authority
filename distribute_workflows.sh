@@ -32,6 +32,6 @@ for repository in $REPOSITORIES; do
   if [[ $repository == $GITHUB_REPOSITORY ]]; then
     echo "Should not distribute files to same repository. Skipping $repository"
   else
-    ./push_workflow_files.sh $repository ./.github/workflows $DELETE_CONFIG
+    ./push_workflow_files.sh $repository ./distributed $DELETE_CONFIG
   fi
 done
