@@ -36,7 +36,7 @@ EXISTING_WORKFLOWS=$(./find_existing_workflows.sh)
 
 ## Iterate through workflow folder and only include those that differ from target workflows
 let TOTAL_FILES_CHANGED=0
-for file in "$SOURCE_FOLDER/*"; do
+for file in "$SOURCE_FOLDER"/*; do
 
   TARGET_FILE_NAME=$(basename -- $file)
 
