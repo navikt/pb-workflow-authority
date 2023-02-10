@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       dry_run:
-        description: 'Test scenario tags'
+        description: 'Dry run'
         required: true
         type: boolean
         default: false
