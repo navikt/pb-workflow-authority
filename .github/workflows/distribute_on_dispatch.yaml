@@ -1,4 +1,4 @@
-name: Publiser workflows til andre repoer
+name: Legacy - Publiser workflows
 
 on:
   repository_dispatch:
