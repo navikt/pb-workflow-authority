@@ -9,6 +9,7 @@ on:
         type: string
 
 permissions:
+  contents: write
   packages: write
 
 jobs:
