@@ -8,7 +8,6 @@ env:
   COMMIT_SHA: ${{ github.event.client_payload.commit }}
 
 permissions:
-  contents: write
   packages: write
 
 jobs:
